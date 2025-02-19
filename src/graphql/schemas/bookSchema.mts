@@ -9,8 +9,8 @@ export const typeDefs = gql`
       import: ["@key", "@shareable"]
     )
 
-  type Book @key(fields: "id") {
-    id: ID!
+  type Book @key(fields: "_id") {
+    _id: ID!
     title: String!
     author: String!
     description: String
