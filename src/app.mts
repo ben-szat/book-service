@@ -4,20 +4,37 @@ import { typeDefs } from "./graphql/schemas/bookSchema.mts";
 import { resolvers } from "./graphql/resolvers/bookResolvers.mts";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { buildSubgraphSchema } from "@apollo/subgraph";
+import { MongoClient } from "mongodb";
 
-const app = express();
-const port = 4000;
-const server = new ApolloServer({
-  schema: buildSubgraphSchema({ typeDefs, resolvers }),
-});
+const MONGO_URI = "mongodb://root:rootpwd@mongo:27017/";
+const client = new MongoClient(MONGO_URI);
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+const startServer = async () => {
+  try {
+    // Connect to MongoDB
+    await client.connect();
+    console.log("✅ Connected to MongoDB");
 
-console.log(`🚀  Server ready at ${url}`);
+    // Get the books database
+    const db = client.db("book-service-db");
+    const booksCollection = db.collection("books");
 
+    // Apollo Server instance
+    const server = new ApolloServer({
+      schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    });
 
-app.get("/", (req: any, res: any) => {
-  res.send("Hello World!!!!!");
-});
+    // ✅ Pass the MongoDB collection in context
+    const { url } = await startStandaloneServer(server, {
+      listen: { port: 4001 },
+      context: async () => ({ db, booksCollection }), // Now accessible in resolvers
+    });
+
+    console.log(`🚀 Server ready at ${url}`);
+  } catch (error) {
+    console.error("❌ Error connecting to MongoDB:", error);
+    process.exit(1);
+  }
+}
+
+startServer();

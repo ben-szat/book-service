@@ -20,11 +20,11 @@ export const typeDefs = gql`
 
   type Query {
     books: [Book!]
-    book(id: ID!): Book
+    getBookByTitle(title: String!): Book
   }
 
   type Mutation {
-    createBook(title: String!, author: String!, description: String!): Book
+    createBook(title: String!, author: String!, description: String, price: Float!, category: String!): Book
     updateBook(
       id: ID!
       title: String!

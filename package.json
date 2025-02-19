@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.mts",
+    "dev": "nodemon --legacy-watch src/app.mts",
     "compile": "tsc",
     "start": "pnpm run compile && node ./dist/app.js"
   },
@@ -25,6 +25,7 @@
     "graphql": "^16.10.0",
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.13.0",
     "mongoose": "^8.10.1",
     "multer": "1.4.5-lts.1"
   },
@@ -36,8 +37,6 @@
     "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^22.13.4",
     "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3"
   }
 }
